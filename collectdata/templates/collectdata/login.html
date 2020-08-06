@@ -1,0 +1,23 @@
+{% extends 'collectdata/nav.html' %}
+{% block body_block%}
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+	.container
+	{
+		margin-top: 200px;
+		margin-left: 600px;
+		font-family: 'Abel', sans-serif;
+		font-size: 20px;
+	}
+</style>
+<div class="container">
+	<form method="POST">
+		{% csrf_token %}
+		{{form.as_p}}
+			<button class="btn btn-sm btn-primary" type="submit">Login</button>
+	</form>
+	{% for message in messages %}
+	<h4>{{message}} </h4>
+	{% endfor %}
+</div>
+{% endblock %}

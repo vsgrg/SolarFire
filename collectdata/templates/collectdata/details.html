@@ -1,0 +1,17 @@
+{% extends "collectdata/nav.html" %}
+{% block body_block %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+</style>
+<div class = "container">
+    <h3 style="font-family: 'Abel', sans-serif;text-align:center;font-size:35px;">Solar Fire Database Management</h3>
+    <form method="POST">
+        {% csrf_token %} 
+        <div class="form-group">
+          <label for="Name"style="font-family: 'Abel', sans-serif;font-size:30px;";>Name:</label>
+          <input type="text" class="form-control" id="name" placeholder="enter name" name="name">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

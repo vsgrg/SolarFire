@@ -1,0 +1,17 @@
+from django.contrib import admin
+from .models import *
+admin.site.register(UserDetail)
+admin.site.register(Basicdata)
+admin.site.register(BoostAngle)
+admin.site.register(BoostAngleDetail)
+admin.site.register(Condition)
+admin.site.register(Irsupport)
+admin.site.register(Gasgiant)
+admin.site.register(C)
+admin.site.register(Opposition)
+admin.site.register(Sextile)
+admin.site.register(Trine)
+admin.site.register(BracketedC)
+admin.site.register(MultipleSquare)
+admin.site.register(Moon)
+admin.site.register(Bracketed)

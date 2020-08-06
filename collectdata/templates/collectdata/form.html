@@ -1,0 +1,1258 @@
+{% extends 'collectdata/nav.html' %}
+
+
+
+{% block body_block%}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+    .form-group
+    {
+        width:85%;
+    }
+    h3{
+        font-family:Verdana;
+        font-size: 250%;
+        font-family: 'Abel', sans-serif;
+        text-align: center;
+    }
+    .container
+    {
+        font-family: 'Abel', sans-serif;
+    }
+</style>
+<div class="container">
+<h3>Solar Fire Database Management</h3>
+  <form method="POST">
+    {% csrf_token %} 
+    <div class="form-group">
+      <label for="Name"><h6>Name:</h6></label>
+      <select id="name" name="name">
+          {% for records in re %}        
+              <option value="{{ records.pk }}">{{records.name}}</option>
+          {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="date"><h6>Date:</h6></label>
+      <input type="date" class="form-control" id="date" placeholder="date" name="date">
+    </div>
+    <div class="form-group">
+        <label for="start time"><h6>Start Time(24 hours):</h6></label>
+        <input type="time" class="form-control" id="starttime" placeholder="start time" name="stime">
+    </div>
+    <div class="form-group">
+        <label for="stop time"><h6>Stop Time(24 hours):</h6></label>
+        <input type="time" class="form-control" id="stoptime" placeholder="stop time" name="ftime">
+    </div>
+    <div class="form-group">
+        <input type="button" class="btn btn-sm btn-info" name="OK" value="Total Time" onclick="calculatetime()"><br>
+        <label for="total time"><h6>Total Time:</h6></label> 
+        <input type="text" class="form-control" id="totaltime" placeholder="total time" name="totaltime">
+    
+    </div>
+    <script>
+        
+        function calculatetime()
+            {
+                var s_time = document.getElementById("starttime").value;
+                var f_time = document.getElementById("stoptime").value;
+                time= moment.duration(moment(f_time, "HH:mm").diff(moment(s_time, "HH:mm")));
+                total=(`${time.hours()}:${time.minutes()}`);
+                document.getElementById("totaltime").value = total;
+            }
+        
+    </script>
+ 
+    <div class="form-group">
+        <label for="first perception"><h6>First Perception(0-100%):</h6></label>
+        <input type="number" class="form-control" id="fp" placeholder="first perception" name="firstperception">
+    </div>
+
+    <div class="form-group">
+        <label for="last perception"><h6>last Perception(0-100%):</h6></label>
+        <input type="number" class="form-control" id="lp" placeholder="last perception" name="lastperception">
+    </div>
+    <div class="form-group">
+        <h6>Total Drawing:</h6><input type="number" class="form-control" id="td" placeholder="total drawing" name="td">
+        <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="drawing()"/>
+        <h6>Drawing Analysis</h6>
+        <div id="totalDrawing"></div>
+
+        <table class="table">
+                <thead>
+                <tr>
+                    <td><input type="button" class="btn btn-sm btn-info" name="Sumbit" value="Correct" onclick="corrected()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info" name="Sumbit" value="Displaced" onclick="disp()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info"name="Sumbit" value="Total Meld" onclick="total_melded()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info"name="Sumbit" value="Correct Meld" onclick="corect_melded()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info"name="Sumbit" value="Incorect Meld" onclick="incorect_melded()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info"name="Sumbit" value="Total Correct Meld" onclick="total_corect_melded()"/></td>
+                    <td><input type="button" class="btn btn-sm btn-info"name="Sumbit" value="Total Incorect Meld" onclick="total_incorect_melded()"/></td>
+                            
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="text" class="form-control" id="co" placeholder="correct(%)" name="correct"></td>
+                    <td><input type="text" class="form-control" id="di" placeholder="displaced(%)" name="displaced"></td>
+                    <td><input type="text" class="form-control" id="ml" placeholder="total meld(%)" name="total_meld"></td>
+                    <td><input type="text" class="form-control" id="co-ml" placeholder="correct meld" name="correct_meld"></td>
+                    <td><input type="text" class="form-control" id="in-ml" placeholder="incorrect meld" name="incorrect_meld"></td>
+                    <td><input type="text" class="form-control" id="to-co-ml" placeholder="total correct meld(%)" name="total_correct_meld"></td>
+                    <td><input type="text" class="form-control" id="to-in-ml" placeholder="total incorrect meld(%)" name="total_incorrect_meld"></td>
+                </tr>
+                </tbody>
+        </table>
+
+        <script>
+            var drawingvalue=0;
+            var drawingvalue1=0;
+            var total_meld=0
+            var melddrawingcorect = 0;
+            var melddrawingincorect=0;
+            function drawing()
+            {
+                    var val1 = parseInt(document.getElementById("td").value);
+                    table = `<table class="table ">`
+
+                    table += `<tr><td>correct</td>`
+                    for(i=0;i<val1;i++){
+                        table+=`<td><input type="number" class='form-control' onchange="oncorrect(this.value)" id="cb" max=1 min=0 step="any"></td>`
+                    }
+                    table += '</tr>'
+
+                    table += `<tr><td>incorrect</td>`
+                    for(i=0;i<val1;i++){
+                        table+=`<td><input type="number" class='form-control' onchange="incorrect(this.value)" id="box"  max=1 min=0 step="any"></td>`
+                    }
+                    table += '</tr>'
+
+                    table += '</table>'
+                    document.getElementById('totalDrawing').innerHTML = table
+
+            }
+            function oncorrect(value)
+            { 
+                value = parseFloat(value);
+                if ((value < 1) & (value >= 0))
+                {
+                    melddrawingcorect += value; 
+                    total_meld +=1             
+                }
+                else((value < 1) & (value >= 0))
+                {
+                    drawingvalue += value;
+                }
+
+            }
+        
+            function incorrect(value)
+            {
+                value = parseFloat(value); 
+                if ((value < 1) & (value >= 0)){
+                    melddrawingincorect += value;
+                }
+                else ((value < 1) & (value >= 0))
+                {
+                    drawingvalue1 += value;
+                }
+            }
+        
+            function corrected()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = drawingvalue/val1;
+                document.getElementById("co").value = x +"%";
+            }
+            function disp()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = drawingvalue1/val1;
+                document.getElementById("di").value = x +"%"; 
+            }
+            function total_melded()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = total_meld/val1;
+                document.getElementById("ml").value = x +"%";
+            }
+            function corect_melded()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = melddrawingcorect
+                document.getElementById("co-ml").value = x ;
+            }
+            function incorect_melded()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = melddrawingincorect
+                document.getElementById("in-ml").value = x ;
+            }
+            function total_corect_melded()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = melddrawingcorect/val1
+                document.getElementById("to-co-ml").value = x  +"%";
+            }
+            function total_incorect_melded()
+            {
+                var val1 = parseInt(document.getElementById("td").value);
+                var x = melddrawingincorect/val1
+                document.getElementById("to-in-ml").value = x +"%";
+            }
+        </script>  
+    </div>
+    <div class="form-group">
+            <label for="boost Angle"><h6> No.of Boost Angle:</h6></label>
+            <input type="number" class="form-control" id="boost" placeholder="boostangle" name="boostangle">
+            <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Boost()"/>  
+            <script>
+                    function Boost()
+                    {
+                        var val1 = parseInt(document.getElementById("boost").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr><td><label for="boost Angle"><h6>Boost Angle:</h6></label></td>
+                                <td><label for="Body"><h6>Body:</h6></label></td>
+                                <td><label for="degree"><h6>Degree:</h6></label></td>
+                                <td><label for="degree type"><h6>Degree Type:</h6></label></td>
+                                </tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" name="boostanglebody">
+                                        <option value="BA1">BA1</option>
+                                        <option value="BA2">BA2</option>
+                                        <option value="BA3">BA3</option>
+                                        <option value="BA4">BA4</option>
+                                     </select></td>`
+    
+                            table+=`<td><select class="browser-default custom-select" name="babody">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option></select></td>`
+    
+                            table+=` <td><select class="browser-default custom-select" name="badegree">
+                       
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    </select></td>`
+    
+                            table+=`<td><select class="browser-default custom-select" name="badegreetype">
+                                    <option value="Applying">Applying</option>
+                                    <option value="Seperating">Seperating</option>
+                                    </select></td>`
+                    
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        
+                        document.getElementById('totalboost').innerHTML = table
+                    }
+                </script>
+                <div id="totalboost"></div>
+                <input type="number" class="form-control" id="ba" placeholder="total no of boostangle" name="boostangle">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="BoostAngle()"/>  
+                <script>
+                function BoostAngle()
+                {
+                    var val1 = parseInt(document.getElementById("ba").value);
+                    table = `<table class="table ">`
+                    table += `<thead><tr><td><label for="boost Angle"><h6>Boost Angle:</h6></label></td>
+                            <td><label for="Body"><h6>Body:</h6></label></td>
+                            <td><label for="angle"><h6>Angle:</h6></label></td>
+                            <td><label for="Body"><h6>Body:</h6></label></td>
+                            <td><label for="degree"><h6>Degree:</h6></label></td>
+                            <td><label for="degree type"><h6>Degree Type:</h6></label></td>
+                            <td><label for="energy"><h6>Energy:</h6></label></td></tr></thead>`
+                    table +='<tbody>'
+                    for(i=0;i<val1;i++) 
+                    {   table +='<tr>'
+                        table+=`<td><select class="browser-default custom-select" name="boostanglebody1">
+                                    <option value="BA1">BA1</option>
+                                    <option value="BA2">BA2</option>
+                                    <option value="BA3">BA3</option>
+                                    <option value="BA4">BA4</option>
+                                 </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="bbody">
+                                <option value="Sun">Sun</option>
+                                <option value="Mercury">Mercury</option>
+                                <option value="Venus">Venus</option>
+                                <option value="Moon">Moon</option>
+                                <option value="Mars">Mars</option>
+                                <option value="Ceres">Ceres</option>
+                                <option value="Jupiter">Jupiter</option>
+                                <option value="Saturn">Saturn</option>
+                                <option value="Chiron">Chiron</option>
+                                <option value="Uranus">Uranus</option>
+                                <option value="Neptune">Neptune</option>
+                                <option value="Pluto">Pluto</option></select></td>`
+
+                        table+=` <td><select class="browser-default custom-select" name="boostsymbol">
+                                <option value="0">0&#176;</option>
+                                <option value="60">60&#176;</option>
+                                <option value="90">90&#176;</option>
+                                <option value="120">120&#176;</option>
+                                <option value="180">180&#176;</option>
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="bbody1">
+                                <option value="Sun">Sun</option>
+                                <option value="Mercury">Mercury</option>
+                                <option value="Venus">Venus</option>
+                                <option value="Moon">Moon</option>
+                                <option value="Mars">Mars</option>
+                                <option value="Ceres">Ceres</option>
+                                <option value="Jupiter">Jupiter</option>
+                                <option value="Saturn">Saturn</option>
+                                <option value="Chiron">Chiron</option>
+                                <option value="Uranus">Uranus</option>
+                                <option value="Neptune">Neptune</option>
+                                <option value="Pluto">Pluto</option></select></td>`        
+
+                        table+=` <td><select class="browser-default custom-select" name="bdegree">
+                   
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="bdegreetype">
+                                <option value="Applying">Applying</option>
+                                <option value="Seperating">Seperating</option>
+                                </select></td>`
+                
+                        table+=`<td><select class="browser-default custom-select" name="benergy">
+                                <option value="Positive">Positive</option>
+                                <option value="Negative">Negative</option>
+                                </select></td>`
+                    
+                        
+                        table+='</tr>'
+                    }
+                    table +='</tbody>'
+                    
+                    document.getElementById('totalboost1').innerHTML = table
+                }
+            </script>
+            
+            <div id="totalboost1"></div>
+        </div>
+    <div class="form-group">
+        <label for="condition"><h6>No. of Condition:</h6></label>
+        <input type="number" class="form-control" id="tc" placeholder="condition" name="condition">
+        <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="cond()"/>  
+            <script>
+                function cond()
+                {
+                    var val1 = parseInt(document.getElementById("tc").value);
+                    table = `<table class="table ">`
+                    table += `<thead><tr><td><label for="body"><h6>Body:</h6></label></td>
+                            <td><label for="body"><h6>Body:</h6></label></td>
+                            <td><label for="degree"><h6>Degree:</h6></label></td>
+                            <td><label for="degree type"><h6>Degree Type:</h6></label></td>
+                            <td><label for="energy"><h6>Energy:</h6></label></td></tr></thead>`
+                    table +='<tbody>'
+                    for(i=0;i<val1;i++) 
+                    {   table +='<tr>'
+                        table+=`<td><select class="browser-default custom-select" name="conditionbody">
+                                <option value="Moon">Moon</option>
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" id="con" name="condition1">
+                                <option value="Sun">Sun</option>
+                                <option value="Mercury">Mercury</option>
+                                <option value="Venus">Venus</option>
+                                <option value="Moon">Moon</option>
+                                <option value="Mars">Mars</option>
+                                <option value="Ceres">Ceres</option>
+                                <option value="Jupiter">Jupiter</option>
+                                <option value="Saturn">Saturn</option>
+                                <option value="Chiron">Chiron</option>
+                                <option value="Uranus">Uranus</option>
+                                <option value="Neptune">Neptune</option>
+                                <option value="Pluto">Pluto</option></td>`
+            
+                        table+=` <td><select class="browser-default custom-select" name="cdegree">
+                             
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="cdegreetype">
+                                <option value="Applying">Applying</option>
+                                <option value="Seperating">Seperating</option>
+                                </select></td>`
+                
+                        table+=`<td><select class="browser-default custom-select" name="cenergy">
+                                <option value="Positive">Positive</option>
+                                <option value="Negative">Negative</option>
+                                </select></td>`
+                    
+                        
+                        table+='</tr>'
+                    }
+                    table +='</tbody>'
+                    
+                    document.getElementById('totalcondition').innerHTML = table
+                }
+            </script>
+            <div id="totalcondition"></div>
+        </div>
+        <div class="form-group">
+                <label for="T Position"><h6>T Position:</h6></label>
+                <table class="table">
+                <tbody>
+                <tr>
+                    <td><select class="browser-default custom-select" name='tposition'>
+                            <option value="Above">Above</option>
+                            <option value="Below">Below</option>
+                            
+                    </select></td>
+                </tr>
+                </tbody>
+                </table>
+        </div>
+        <div class="form-group">
+                <label for="ir support"><h6>No. of IR Support:</h6></label>
+                <input type="number" class="form-control" id="irs" placeholder="irsupport" name="irsupport">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="irsup()"/> 
+                <script>
+                    function irsup()
+                    {
+                        var val1 = parseInt(document.getElementById("irs").value);
+                        table = `<table class="table ">`
+                        table +=`<thead><tr><td><label for="Body"><h6>Body:</h6></label></td>
+                            <td><label for="body"><h6>Body:</h6></label>
+                            </td><td><label for="degree"><h6>Degree:</h6></label>
+                            </td><td><label for="symbol"><h6>Symbol:</h6></label></td>
+                            <td><label for="degree type"><h6>Degree Type:</h6></label></td>
+                            </tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" name="irbody1">
+                                    <option value="Moon">Moon</option>
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="irbody">
+                                    <option value="C1">C1</option>
+                                    <option value="C2B">C2B</option>
+                                    <option value="C3B">C3B</option>
+                                    <option value="C4">C4</option>
+                                    <option value="C5">C5</option>
+                                    <option value="C6B">C6B</option>     
+                                    </select></td>`
+                
+                            table+=` <td><select class="browser-default custom-select" name="irdegree">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    </select></td>`
+    
+                            table+=`<td><select class="browser-default custom-select" name="irsymbol">
+                                    <option value="0">0&#176;</option>
+                                    <option value="60">60&#176;</option>
+                                    <option value="90">90&#176;</option>
+                                    <option value="120">120&#176;</option>
+                                    <option value="180">180&#176;</option>
+                                    </select></td>`
+                    
+                            table+=`<td><select class="browser-default custom-select" name="irdegreetype">
+                                    <option value="Applying">Applying</option>
+                                    <option value="Seperating">Seperating</option>
+                                    </select></td>`
+
+                          
+                        
+                            
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('totalir').innerHTML = table
+                    }
+                </script>
+            <div id="totalir"></div>
+        </div>
+        <div class="form-group">
+                <label for="bracket"><h6>No. of Bracketed:</h6></label>
+                <input type="number" class="form-control" id="br" placeholder="Bracketed " name="Bracketed">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Bracket()"/>
+                <script>
+                    function Bracket()
+                    {
+                        var val1 = parseInt(document.getElementById("br").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr><td><label for="bracketed"><h6>Bracketed:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="bracketed angle"><h6>Bracketed Angle:</h6></label></td>
+                                </tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" name="bracket">
+                                    <option value="YES">Yes</option>
+                                    <option value="NO">No</option>    
+                                     </select></td>`
+                
+                            table+=`<td><select class="browser-default custom-select" name="bracketbody">
+                                    <option value="None">None</option>
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+    
+                            table+=`<td><select class="browser-default custom-select" name="bracketdegree">
+                                    <option value="None">None</option>    
+                                    <option value="0S">0S</option>
+                                    <option value="1S">1S</option>
+                                    <option value="2S">2S</option>
+                                    <option value="3S">3S</option>
+                                    <option value="4S">4S</option>
+                                    <option value="5S">5S</option>
+                                    <option value="6S">6S</option>
+                                    <option value="7S">7S</option>
+                                    <option value="8S">8S</option>
+                                    <option value="9S">9S</option>
+                                    <option value="10S">10S</option>     
+                                    </select></td>`
+                    
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('tb').innerHTML = table
+                    }
+                </script>
+            <div id="tb"></div> 
+        </div>
+        <div class="form-group">
+            <label for="sew/mew"><h6>SEW/MEW:</h6></label>
+            <table class="table">
+            <tr>
+                <td><select class="browser-default custom-select" name="type">
+                        <option value="SEW">SEW</option>
+                        <option value="MEW">MEW</option>
+                </select></td>
+            </tr>
+            </table>
+        </div>
+        <div class="form-group">
+                <label for="Gas Giant"><h6>No. of Gas Gaint:</h6></label>
+                <input type="number" class="form-control" id="gg" placeholder="No of gas gaint " name="gasgaint">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="gasgiant()"/>
+                <script>
+                    function gasgiant()
+                    {
+                        var val1 = parseInt(document.getElementById("gg").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr><td><label for="gas"><h6>Gas:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="degree type"><h6>Symbol:</h6></label></td>
+                                <td><label for="degree"><h6>Degree:</h6></label></td>
+                                <td><label for="degree type"><h6>Degree Type:</h6></label></td>
+                                <td><label for="energy"><h6>Energy:</h6></label></td></tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" name="gastype">
+                                    <option value="C1">C1</option>
+                                    <option value="C6B">C6B</option>
+                                    <option value="C7">C7</option>     
+                                     </select></td>`
+                
+                            table+=`<td><select class="browser-default custom-select" name="gbody">
+                                    <option value="Moon">Moon</option> 
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="gasymbol">
+                                    <option value="0">0&#176;</option>
+                                    <option value="60">60&#176;</option>
+                                    <option value="90">90&#176;</option>
+                                    <option value="120">120&#176;</option>
+                                    <option value="180">180&#176;</option>
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="gdegree">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    </select></td>`
+                    
+                            table+=`<td><select class="browser-default custom-select" name="gdegreetype">
+                                    <option value="Applying">Applying</option>
+                                    <option value="Seperating">Seperating</option>          
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="genergy">
+                                    <option value="Positive">Positive</option>
+                                    <option value="Negative">Negative</option>   
+                                    </select></td>`
+                            
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('totalgas').innerHTML = table
+                    }
+                </script>
+            <div id="totalgas"></div> 
+        </div>
+        <div class="form-group">
+                <label for="opposition"><h6>No. of C90:</h6></label>
+                <input type="number" class="form-control" id="c90" placeholder="no of c90" name="c90">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Cc()"/> 
+                <script>
+                    function Cc()
+                    {
+                        var val1 = parseInt(document.getElementById("c90").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="body"><h6>Symbol:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="Degree"><h6>Degree:</h6></label></td>
+                                <td><label for="Degree type"><h6>Degree Type:</h6></label></td> 
+                                </tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" id ='c90' name="C90body">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>        
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="C90symbol">
+                                    <option value="0">0&#176;</option>
+                                    <option value="60">60&#176;</option>
+                                    <option value="90">90&#176;</option>
+                                    <option value="120">120&#176;</option>
+                                    <option value="180">180&#176;</option>
+                                    </select></td>`
+
+
+                            table+=`<td><select class="browser-default custom-select" id ='c90' name="C90body1">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>        
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="C90degree">  
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>        
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="C90degreetype">
+                                    <option value="Applying">Applying</option>    
+                                    <option value="Seperating">Seperating</option>
+                                    </select></td>`
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('ccc').innerHTML = table
+                    }
+                </script>
+            <div id="ccc"></div>
+        </div>
+        <div class="form-group">
+                <label for="C180"><h6>180:</h6></label>
+                <table class="table">
+                <tbody>
+                <tr>
+                    <td><select class="browser-default custom-select" name="C180body">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select></td>
+                </tr>
+                </tbody>
+                </table>
+        </div>
+        <div class="form-group">
+                <label for="opposition"><h6> No. of Opposition:</h6></label>
+                <input type="number" class="form-control" id="op" placeholder="no of opposition" name="opposition">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Opps()"/> 
+                <script>
+                    function Opps()
+                    {
+                        var val1 = parseInt(document.getElementById("op").value);
+                        table = `<table class="table ">`
+                        table +=`<thead><tr><td><label for="body"><h6>Body:</h6></label></td>
+                                    <td><label for="Opposition"><h6>Opposition:</h6></label>
+                                    <td><label for="Body"><h6>Body:</h6></label>
+                                    <td><label for="degree"><h6>Degree:</h6></label>
+                                <td><label for="degree type"><h6>Degree Type:</h6></label></tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" id ='oppbody' name="oppbody1">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>        
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="oppositiondeg">
+                                    <option value="180">180</option>       
+                                    </select></td>`
+                        
+                            table+=` <td><select class="browser-default custom-select" name="oppbody2">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>     
+
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="oppdegree">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>        
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="oppdegreetype">
+                                    <option value="Applying">Applying</option>    
+                                    <option value="Seperating">Seperating</option>
+                                    
+                                    </select></td>`        
+                            
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('to').innerHTML = table
+                    }
+                </script>
+            <div id="to"></div>
+        </div>
+        <div class="form-group">
+                <label for="mopp"><h6>Multiple Opposition:</h6></label>
+                <table class="table">
+                <tbody>
+                <tr>
+                    <td><select class="browser-default custom-select" name="multiple">
+
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select></td>
+                </tr>
+                </tbody>
+                </table>
+        </div>
+        <div class="form-group">
+                <label for="Gas Giant"><h6>No. of Sextile:</h6></label>
+                <input type="number" class="form-control" id="sextile" placeholder="no of sextile " name="sextile">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="sexTile()"/>
+                <script>
+                    function sexTile()
+                    {
+                        var val1 = parseInt(document.getElementById("sextile").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="symbol"><h6>symbol:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="degree"><h6>Degree:</h6></label></td>
+                                <td><label for="degree type"><h6>Degree Type:</h6></label></td></tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            table+=`<td><select class="browser-default custom-select" name="sextilebody" id='sx'>
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="sextilesymbol">
+                                    <option value="60">60&#176;</option>
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="sextilebody1" id='sx1'>
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+                    
+            
+                            table+=`<td><select class="browser-default custom-select" name="sextiledegree">   
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>       
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="sextiledegreetype">
+                                    <option value="Applying">Applying</option>    
+                                    <option value="Seperating">Seperating</option>   
+                                    </select></td>`
+                            
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('totalsextile').innerHTML = table
+                    }
+                   </script>
+            <div id="totalsextile"></div> 
+        </div>
+        <div class="form-group">
+                <label for="Trine"><h6>No. of Trine:</h6></label>
+                <input type="number" class="form-control" id="trine" placeholder="no of trine" name="trine">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Trine()"/>
+                <script>
+                    function Trine()
+                    {
+                        var val1 = parseInt(document.getElementById("trine").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="symbol"><h6>Symbol:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="degree"><h6>Degree:</h6></label></td>
+                                <td><label for="degree type"><h6>Degree Type:</h6></label></td></tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+                            
+                            table+=`<td><select class="browser-default custom-select" id="tri" name="trinebody">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="trinesymbol">
+                                    <option value="180">120</option>    
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" id="tri" name="trinebody1">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="trinedegree">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>       
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="trinedegreetype">
+                                    <option value="Applying">Applying</option>    
+                                    <option value="Seperating">Seperating</option>
+                                    </select></td>`
+                            
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('totaltrine').innerHTML = table
+                    }
+                </script>
+            <div id="totaltrine"></div> 
+        </div>
+        <div class="form-group">
+                <label for="bracketed(ir/or)"><h6>Bracketed(IR/OR):</h6></label>
+                <table class="table">
+                <tbody>
+                <tr>
+                    <td><select class="browser-default custom-select" name="bracketediror">
+                        <option value="None">None</option>
+                        <option value="IR-IR">IR-IR</option>
+                        <option value="IR-OR">IR-OR</option>
+                        <option value="OR-IR">OR-IR</option>
+                        <option value="OR-OR">OR-OR</option>         
+                    </select></td>
+                
+                </tr>
+                </tbody>
+                </table>
+        </div>
+        <div class="form-group">
+                <label for="Bracketed C"><h6>No. of Brackted C:</h6></label>
+                <input type="number" class="form-control" id="braC" placeholder="Bracketed C" name="bracketed C">
+                <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="Brack()"/>
+                <script>
+                    function Brack()
+                    {
+                        var val1 = parseInt(document.getElementById("braC").value);
+                        table = `<table class="table ">`
+                        table += `<thead><tr>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="Angle"><h6>Angle:</h6></label></td>
+                                <td><label for="body"><h6>Body:</h6></label></td>
+                                <td><label for="DA"><h6>Degree:</h6></label></td>
+                                <td><label for="DS"><h6>Degree Type:</h6></label></td>
+                                </tr></thead>`
+                        table +='<tbody>'
+                        for(i=0;i<val1;i++) 
+                        {   table +='<tr>'
+        
+                            table+=`<td><select class="browser-default custom-select" name="bracketedCbody">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="bracketedsymbol">
+                                    <option value="90">90</option>
+                                    <option value="180">180</option>    
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="bracketedCbody1">
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>           
+                                    </select></td>`
+                            table+=`<td><select class="browser-default custom-select" name="bracketeddegree">  
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>         
+                                    </select></td>`
+
+                            table+=`<td><select class="browser-default custom-select" name="brackedteddegreetype">
+                                    <option value="Applying">Applying</option>
+                                    <option value="Seperating">Seperating</option>
+                                    </select></td>`
+                                    
+                            table+='</tr>'
+                        }
+                        table +='</tbody>'
+                        document.getElementById('bracketC').innerHTML = table
+                    }
+                </script>
+            <div id="bracketC"></div> 
+        </div>
+        <div class="form-group">
+            <label for="ms"><h6>No. of Multiple Square:</h6></label>
+            <input type="number" class="form-control" id="ms" placeholder="No of Multiple Suare " name="multiplesquare">
+            <input type="button" class="btn btn-sm btn-info" name="Sumbit" value="OK" onclick="square()"/>
+            <script>
+                function square()
+                {
+                    var val1 = parseInt(document.getElementById("ms").value);
+                    table = `<table class="table ">`
+                    table += `<thead><tr>
+                            <td><label for="body"><h6>Body:</h6></label></td>
+                            <td><label for="degree"><h6>Symbol:</h6></label></td>
+                            <td><label for="degree type"><h6>Degree :</h6></label></td>
+                            <td><label for="energy"><h6>Degree Type:</h6></label></td></tr></thead>`
+                    table +='<tbody>'
+                    for(i=0;i<val1;i++) 
+                    {   table +='<tr>'
+                        table+=`<td><select class="browser-default custom-select" name="multiplebody">
+                                <option value="Sun">Sun</option>
+                                <option value="Mercury">Mercury</option>
+                                <option value="Venus">Venus</option>
+                                <option value="Moon">Moon</option>
+                                <option value="Mars">Mars</option>
+                                <option value="Ceres">Ceres</option>
+                                <option value="Jupiter">Jupiter</option>
+                                <option value="Saturn">Saturn</option>
+                                <option value="Chiron">Chiron</option>
+                                <option value="Uranus">Uranus</option>
+                                <option value="Neptune">Neptune</option>
+                                <option value="Pluto">Pluto</option> 
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="multiplesymbol">
+                                <option value="90">90</option>
+                                </select></td>`
+                
+                        table+=`<td><select class="browser-default custom-select" name="multipledegree">  
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>           
+                                </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="multipledegreetype">
+                                <option value="Applying">Applying</option>
+                                <option value="Seperating">Seperating</option>
+                                </select></td>`
+                        
+                        table+='</tr>'
+                    }
+                    table +='</tbody>'
+                    document.getElementById('totalmultiple').innerHTML = table
+                }
+            </script>
+            <div id="totalmultiple"></div> 
+        </div>
+    <div class="form-group">
+        <label for='giantsqaure'><h6>Giant Square:</h6></label>
+        <table class="table">
+        <tr>
+            <td><select class="browser-default custom-select" name="giantsquare">
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+            </select></td>
+        </tr>
+        </table>
+    </div>
+    <div class="form-group">
+            <label for='house'><h6>House:</h6></label>
+            <table class="table">
+            <tr>
+                <td><select class="browser-default custom-select" name="house">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>       
+                </select></td>
+            </tr>
+            </table>
+        </div>
+        <div class="form-group">
+            <label for="ba"><h6>Moon:</h6></label>
+            <table class="table">
+            <thead>
+                <tr>
+                    <td><label for="boost angle"><h6>Symbol:</h6></label></td>
+                    <td><label for="body"><h6>Body:</h6></label></td>
+                    <td><label for="body"><h6>Degree:</h6></label></td>
+                    <td><label for="body"><h6>Degree Type:</h6></label></td>       
+                </tr>    
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><select class="browser-default custom-select" name="moonsym">
+                        <option value="0">0&#176;</option>
+                        <option value="60">60&#176;</option>
+                        <option value="90">90&#176;</option>
+                        <option value="120">120&#176;</option>
+                        <option value="180">180&#176;</option>
+                        </select></td>
+            
+                    <td><select class="browser-default custom-select" name="moonbody">
+                        <option value="Sun">Sun</option>
+                        <option value="Mercury">Mercury</option>
+                        <option value="Venus">Venus</option>
+                        <option value="Mars">Mars</option>
+                        <option value="Ceres">Ceres</option>
+                        <option value="Jupiter">Jupiter</option>
+                        <option value="Saturn">Saturn</option>
+                        <option value="Chiron">Chiron</option>
+                        <option value="Uranus">Uranus</option>
+                        <option value="Neptune">Neptune</option>
+                        <option value="Pluto">Pluto</option>        
+                        </select></td>
+                    <td><select class="browser-default custom-select" name="moondegree">
+                        
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>           
+                        </select></td>
+
+                    <td><select class="browser-default custom-select" name="moondegreetype">  
+                        <option value="Applying">Applying</option>
+                        <option value="Seperating">Seperating</option>
+                    </select></td>
+    
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+
+{% endblock %}
