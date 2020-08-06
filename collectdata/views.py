@@ -47,7 +47,7 @@ def add_form(request):
         boo=('boostanglebody') and ('babody') and ('badegree') and ('badegreetype')
         boost=('boostanglebody') and ('bbody') and ('boostsymbol') and ('bbody') and ('bdegree') and ('bdegreetype') and ('benergy')
         cond=('conditionbody') and ('condition1') and ('cdegree') and ('cdegreetype') and ('cenergy')
-        ir=('irbody') and ('irdegree') and ('irdt') and ('irbody1')
+        ir=('irbody') and ('irdegree') and ('irdt') and ('irbody1') and ('irenerygy')
         gas=('gastype') and ('gdegree') and ('gassymbol')and ('gdegreetype') and ('genergy')
         c=('C90body') and ('C90symbol') and ('C90body1') and ('C90degree')  and ('C90degreetype')
         opp=("oppbody1") and ('oppositiondeg') and ('oppbody2') and ("oppdegree") and ("oppdegreetype")
@@ -138,6 +138,7 @@ def add_form(request):
             irsym=request.POST.getlist('irsymbol')
             irdegtype=request.POST.getlist('irdegreetype')
             irbody1=request.POST.getlist('irbody1')
+            irenergy=request.POST.getlist('irenergy')
             ir_data=len(irbody)
             for i in range(ir_data):
                 post4=Irsupport()
@@ -146,7 +147,8 @@ def add_form(request):
                 post4.degree=irdeg[i]
                 post4.sym=irsym[i]
                 post4.degree_type=irdegtype[i] 
-                post4.body1=irbody1[i]              
+                post4.body1=irbody1[i]
+                post4.energy=irenergy[i]              
                 post4.save()
                  
             

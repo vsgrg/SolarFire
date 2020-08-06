@@ -72,7 +72,8 @@ class Irsupport(models.Model):
     degree=models.CharField(max_length=10,null=True)
     sym=models.IntegerField(null=True)  
     degree_type=models.CharField(max_length=10,null=True)
-    body1=models.CharField(max_length=10,null=True) 
+    body1=models.CharField(max_length=10,null=True)
+    energy=models.CharField(max_length=30,null=True)
     
     def __str__(self):
         return str(self.name)
