@@ -44,7 +44,7 @@ class BoostAngleDetail(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     boostanglebody=models.CharField(max_length=10,null=True)
     body=models.CharField(max_length=10,null=True)
-    boost_symbol=models.IntegerField(null=True)
+    boost_symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=10,null=True)
     degree=models.CharField(max_length=10,null=True)  
     degree_type=models.CharField(max_length=10,null=True)
@@ -70,7 +70,7 @@ class Irsupport(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     body=models.CharField(max_length=10,null=True) 
     degree=models.CharField(max_length=10,null=True)
-    sym=models.IntegerField(null=True)  
+    sym=models.CharField(max_length=10,null=True,blank=True)
     degree_type=models.CharField(max_length=10,null=True)
     body1=models.CharField(max_length=10,null=True)
     energy=models.CharField(max_length=30,null=True)
@@ -90,7 +90,7 @@ class Bracketed(models.Model):
 class Gasgiant(models.Model): 
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
     gas=models.CharField(max_length=10,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body=models.CharField(max_length=10,null=True)
     degree=models.CharField(max_length=10,null=True) 
     degree_type=models.CharField(max_length=10,null=True)
@@ -102,7 +102,7 @@ class Gasgiant(models.Model):
 class C(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     body=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
     degree_type=models.CharField(max_length=10,null=True)
@@ -114,7 +114,7 @@ class C(models.Model):
 class Opposition(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     body1=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body2=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=30,null=True)
     degree_type=models.CharField(max_length=30,null=True)
@@ -124,7 +124,7 @@ class Opposition(models.Model):
 class Sextile(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     body=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
     degree_type=models.CharField(max_length=10,null=True)
@@ -136,7 +136,7 @@ class Sextile(models.Model):
 class Trine(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
     body=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
     degree_type=models.CharField(max_length=10,null=True)
@@ -148,7 +148,7 @@ class Trine(models.Model):
 class BracketedC(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
     body=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
     degree_type=models.CharField(max_length=10,null=True)
@@ -159,7 +159,7 @@ class BracketedC(models.Model):
 class MultipleSquare(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
     body=models.CharField(max_length=30,null=True)
-    symbol=models.IntegerField(null=True)
+    symbol=models.CharField(max_length=10,null=True,blank=True)
     degree=models.CharField(max_length=30,null=True)
     degree_type=models.CharField(max_length=10,null=True)
     
@@ -168,7 +168,7 @@ class MultipleSquare(models.Model):
     
 class Moon(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
-    sym=models.IntegerField(null=True)
+    sym=models.CharField(max_length=10,null=True,blank=True)
     body=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
     degree_type=models.CharField(max_length=10,null=True)
