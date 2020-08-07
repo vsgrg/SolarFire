@@ -2,15 +2,16 @@
 {% block body_block %}
 <div class = "container">
 <div class='col-md-5'>
-    <h5>NAMES:</h5>
         <div class ="card card-body">
             <table class='table table-sm'>
                
                 {% for i in cust %}
+
                 <tr>
-                    <td>{{i.name}}</td>
+                    <td>Name:{{i.name}}</td>
                 </tr>
                 {% endfor %}
+                <p>Number of data uploaded:{{total_data}}</p>
             </table>
         </div>
 </div>

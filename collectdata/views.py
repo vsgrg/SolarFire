@@ -28,7 +28,9 @@ def login_request(request):
 @login_required(login_url='login')
 def home(request):
     cust=UserDetail.objects.all()
-    return render(request,'collectdata/home.html',{'cust':cust})
+    total=Basicdata.objects.all()
+    total_data=total.count()
+    return render(request,'collectdata/home.html',{'cust':cust,'total_data':total_data})
 
 @login_required(login_url='login')
 def Details(request):
@@ -262,13 +264,20 @@ def add_form(request):
                 post11.degree=mulap[i]
                 post11.degree_type=mulsep[i]
                 post11.save()
-            post12=Moon()
-            post12.name=UserDetail.objects.get(pk=name)
-            post12.sym= request.POST.get('moonsym')
-            post12.body= request.POST.get('moonbody')
-            post12.degree=request.POST.get('moondegree')
-            post12.degree_type=request.POST.get('moondegreetype')
-            post12.save()
+                
+            moonsym=request.POST.getlist('moonsym')
+            moonbody=request.POST.getlist('moonbody')
+            moondeg=request.POST.getlist('moondegree')
+            moondegtype=request.POST.getlist('moondegreetype')
+            moon_data=len(moonbody)
+            for i in range(moon_data):
+                post12=Moon()
+                post12.name=UserDetail.objects.get(pk=name)
+                post12.sym= moonsym[i]
+                post12.body= moonbody[i]
+                post12.degree=moondeg[i]
+                post12.degree_type=moondegtype[i]
+                post12.save()
             
             bracketed=request.POST.getlist('bracket')
             bracket_body=request.POST.getlist('bracketbody')
