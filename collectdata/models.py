@@ -160,6 +160,7 @@ class MultipleSquare(models.Model):
     name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
+    body1=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=30,null=True)
     degree_type=models.CharField(max_length=10,null=True)
     

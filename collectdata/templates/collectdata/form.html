@@ -1109,6 +1109,7 @@
                     table += `<thead><tr>
                             <td><label for="body"><h6>Body:</h6></label></td>
                             <td><label for="symbol"><h6>Symbol:</h6></label></td>
+                            <td><label for="body"><h6>Body:</h6></label></td>
                             <td><label for="degree"><h6>Degree :</h6></label></td>
                             <td><label for="degree type"><h6>Degree Type:</h6></label></td></tr></thead>`
                     table +='<tbody>'
@@ -1132,6 +1133,21 @@
                         table+=`<td><select class="browser-default custom-select" name="multiplesymbol">
                                 <option value="90">90</option>
                                 </select></td>`
+
+                        table+=`<td><select class="browser-default custom-select" name="multiplebody1">
+                            <option value="Sun">Sun</option>
+                            <option value="Mercury">Mercury</option>
+                            <option value="Venus">Venus</option>
+                            <option value="Moon">Moon</option>
+                            <option value="Mars">Mars</option>
+                            <option value="Ceres">Ceres</option>
+                            <option value="Jupiter">Jupiter</option>
+                            <option value="Saturn">Saturn</option>
+                            <option value="Chiron">Chiron</option>
+                            <option value="Uranus">Uranus</option>
+                            <option value="Neptune">Neptune</option>
+                            <option value="Pluto">Pluto</option> 
+                            </select></td>`
                 
                         table+=`<td><select class="browser-default custom-select" name="multipledegree">  
                                 <option value="0">0</option>

@@ -56,7 +56,7 @@ def add_form(request):
         sextile=('sextilebody') and('sextilesymbol') and ('sextilebody1') and ('sextiledegree') and ('sextiledegreetype')
         trine=('trinesymbol') and ('trinebody') and ("trinebody1") and ('trinedegree') and ('trinedegreetype')
         bracketedC=('bracketedCbody') and ('bracketedsymbol') and ('bracketedCbody1') and ('bracketeddegree') and ('brackedteddegreetype')
-        multiple=('multiplebody') and ('multiplesymbol') and ('multipledegree') and ('multipledegreetype')
+        multiple=('multiplebody') and ('multiplesymbol') and ("multiplebody1") and ('multipledegree') and ('multipledegreetype')
         moon =('moonsym') and ('moonbody') and ('moondegree') and ('moondegreetype')
         bracket=("bracket") and ("bracketbody") and ("bracketdegree")
         if request.POST.get(basic) and (boo) and (boost) and (cond) and (ir) and (gas) and (c) and (opp) and (sextile) and (trine) and (moon) and (bracketedC) and (multiple):
@@ -253,6 +253,7 @@ def add_form(request):
             
             mulbody=request.POST.getlist('multiplebody')
             muldeg=request.POST.getlist('multiplesymbol')
+            mulbody1=request.POST.getlist('multiplebody1')
             mulap=request.POST.getlist('multipledegree')
             mulsep=request.POST.getlist('multipledegreetype')
             mul_data=len(mulbody)
@@ -261,6 +262,7 @@ def add_form(request):
                 post11.name=UserDetail.objects.get(pk=name)
                 post11.body=mulbody[i]
                 post11.symbol=muldeg[i]
+                post11.body1=mulbody1[i]
                 post11.degree=mulap[i]
                 post11.degree_type=mulsep[i]
                 post11.save()
