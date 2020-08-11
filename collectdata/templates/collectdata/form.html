@@ -472,12 +472,18 @@
                                     </select></td>`
 
                             table+=`<td><select class="browser-default custom-select" name="irbody">
-                                    <option value="C1">C1</option>
-                                    <option value="C2B">C2B</option>
-                                    <option value="C3B">C3B</option>
-                                    <option value="C4">C4</option>
-                                    <option value="C5">C5</option>
-                                    <option value="C6B">C6B</option>     
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>    
                                     </select></td>`
                 
                             table+=` <td><select class="browser-default custom-select" name="irdegree">
@@ -598,7 +604,7 @@
                     {
                         var val1 = parseInt(document.getElementById("gg").value);
                         table = `<table class="table ">`
-                        table += `<thead><tr><td><label for="gas"><h6>Gas:</h6></label></td>
+                        table += `<thead><tr><td><label for="body"><h6>Body:</h6></label></td>
                                 <td><label for="body"><h6>Body:</h6></label></td>
                                 <td><label for="symbol"><h6>Symbol:</h6></label></td>
                                 <td><label for="degree"><h6>Degree:</h6></label></td>
@@ -608,10 +614,19 @@
                         for(i=0;i<val1;i++) 
                         {   table +='<tr>'
                             table+=`<td><select class="browser-default custom-select" name="gastype">
-                                    <option value="C1">C1</option>
-                                    <option value="C6B">C6B</option>
-                                    <option value="C7">C7</option>     
-                                     </select></td>`
+                                    <option value="Sun">Sun</option>
+                                    <option value="Mercury">Mercury</option>
+                                    <option value="Venus">Venus</option>
+                                    <option value="Moon">Moon</option>
+                                    <option value="Mars">Mars</option>
+                                    <option value="Ceres">Ceres</option>
+                                    <option value="Jupiter">Jupiter</option>
+                                    <option value="Saturn">Saturn</option>
+                                    <option value="Chiron">Chiron</option>
+                                    <option value="Uranus">Uranus</option>
+                                    <option value="Neptune">Neptune</option>
+                                    <option value="Pluto">Pluto</option>     
+                                    </select></td>`
                 
                             table+=`<td><select class="browser-default custom-select" name="gbody">
                                     <option value="Sun">Sun</option>
