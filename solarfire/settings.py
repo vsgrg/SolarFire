@@ -81,16 +81,16 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'solarfire',
-#         'USER': 'postgres',
-#         'PASSWORD':'Sensor@1234',
-#         'HOST': '1.7.151.12',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'solarfire',
+        'USER': 'postgres',
+        'PASSWORD':'',
+        'HOST': '',
+        'PORT': '5432',
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
