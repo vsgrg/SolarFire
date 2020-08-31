@@ -33,6 +33,38 @@ def home(request):
     return render(request,'collectdata/home.html',{'cust':cust,'total_data':total_data})
 
 @login_required(login_url='login')
+def Question(request):
+    person=[]
+    all_data=[]
+    cust=UserDetail.objects.all()
+    for name in cust:
+        basic_datas = Basicdata.objects.filter(name=name,giantsquare="YES")
+        for bas in basic_datas:
+            multiple_squares = MultipleSquare.objects.filter(name=name,date=bas.date)
+            for ms in multiple_squares:
+                dict={
+                    'NAME':bas.name,
+                    'DATE':bas.date,
+                    'FIRST PERCEPTION':bas.first_perception,
+                    'LAST PERCEPTION':bas.last_perception,
+                    'CORRECT':bas.correct,
+                    'DISPLACED':bas.displaced,
+                    'TOTAL MELD':bas.total_meld,
+                    'CORRECT MELD':bas.correct_meld,
+                    'INCORRECT MELD':bas.incorect_meld,
+                    'BODY':ms.body,
+                    'SYMBOL':ms.symbol,
+                    'BODY1':ms.body1,
+                    'DEGREE':ms.degree,
+                    'DEGREE TYPE':ms.degree_type,
+                    }
+            all_data.append(dict)
+            print(all_data)
+    # context={'body':all_data,'symbol':all_data1,'body1':all_data2,'degree':all_data3,'degree_type':all_data4,'name':person,'date':dates}   
+    context={'data':all_data}
+    return render(request,'collectdata/questions.html',context)
+
+@login_required(login_url='login')
 def Details(request):
     if request.method == 'POST':
         post=UserDetail()
@@ -60,7 +92,7 @@ def add_form(request):
         moon =('moonsym') and ('moonbody') and ('moondegree') and ('moondegreetype')
         bracket=("bracket") and ("bracketbody") and ("bracketdegree")
         if request.POST.get(basic) and (boo) and (boost) and (cond) and (ir) and (gas) and (c) and (opp) and (sextile) and (trine) and (moon) and (bracketedC) and (multiple):
-            name= region=request.POST['name']
+            name=request.POST['name']
             post=Basicdata()
             post.name= UserDetail.objects.get(pk=name)
             post.date= request.POST.get('date')
@@ -90,8 +122,9 @@ def add_form(request):
             bdegree0=request.POST.getlist('badegree')
             bbody0_data=len(bbody0)
             for i in range(bbody0_data):
-                post1=BoostAngle()          
+                post1=BoostAngle()         
                 post1.name=UserDetail.objects.get(pk=name)
+                post1.date=post.date
                 post1.boostanglebody=banglebody[i]
                 post1.body=bbody0[i]
                 post1.degree=bdegtype0[i]
@@ -109,6 +142,7 @@ def add_form(request):
             for i in range(bbody0_data):
                 post2=BoostAngleDetail()          
                 post2.name=UserDetail.objects.get(pk=name)
+                post2.date=post.date
                 post2.boostanglebody=banglebody[i]
                 post2.body=bbody0[i]
                 post2.boost_symbol=bangle0[i]
@@ -128,6 +162,7 @@ def add_form(request):
             for i in range(all_data):
                 post3=Condition()          
                 post3.name=UserDetail.objects.get(pk=name)
+                post3.date=post.date
                 post3.conditionbody=condbody[i]
                 post3.first_condition=cond1[i]
                 post3.degree=deg[i]
@@ -145,6 +180,7 @@ def add_form(request):
             for i in range(ir_data):
                 post4=Irsupport()
                 post4.name=UserDetail.objects.get(pk=name)
+                post4.date=post.date
                 post4.body=irbody[i]
                 post4.degree=irdeg[i]
                 post4.sym=irsym[i]
@@ -164,6 +200,7 @@ def add_form(request):
             for i in range(gas_data):    
                 post5=Gasgiant()
                 post5.name=UserDetail.objects.get(pk=name)
+                post5.date=post.date
                 post5.gas=ggas[i]
                 post5.symbol=gsymbol[i]
                 post5.body=gbody[i]
@@ -181,6 +218,7 @@ def add_form(request):
             for i in range(c90_data):    
                 post6=C()
                 post6.name=UserDetail.objects.get(pk=name)
+                post6.date=post.date
                 post6.body=c90body[i]
                 post6.symbol=c90symbol[i]
                 post6.body1=c90body1[i]
@@ -197,6 +235,7 @@ def add_form(request):
             for i in range(opp_data):    
                 post7=Opposition()
                 post7.name=UserDetail.objects.get(pk=name)
+                post7.date=post.date
                 post7.body1=opbody1[i]
                 post7.symbol=opdeg[i]
                 post7.body2=opbody2[i]
@@ -213,6 +252,7 @@ def add_form(request):
             for i in range(sx_data):    
                 post8=Sextile()
                 post8.name=UserDetail.objects.get(pk=name)
+                post8.date=post.date
                 post8.body=sxbody[i]
                 post8.symbol=sxsymbol[i]
                 post8.body1=sxbody1[i]
@@ -228,6 +268,7 @@ def add_form(request):
             for i in range(t_data):    
                 post9=Trine()
                 post9.name=UserDetail.objects.get(pk=name)
+                post9.date=post.date
                 post9.body=tbody[i]
                 post9.symbol=tsymbol[i]
                 post9.body1=tbody1[i]
@@ -244,6 +285,7 @@ def add_form(request):
             for i in range(br_data):    
                 post10=BracketedC()
                 post10.name=UserDetail.objects.get(pk=name)
+                post10.date=post.date
                 post10.body=brbody[i]
                 post10.symbol=brdeg90[i]
                 post10.body1=brbody1[i]
@@ -260,6 +302,7 @@ def add_form(request):
             for i in range(mul_data):    
                 post11=MultipleSquare()
                 post11.name=UserDetail.objects.get(pk=name)
+                post11.date=post.date
                 post11.body=mulbody[i]
                 post11.symbol=muldeg[i]
                 post11.body1=mulbody1[i]
@@ -275,6 +318,7 @@ def add_form(request):
             for i in range(moon_data):
                 post12=Moon()
                 post12.name=UserDetail.objects.get(pk=name)
+                post12.date=post.date
                 post12.sym= moonsym[i]
                 post12.body= moonbody[i]
                 post12.degree=moondeg[i]
@@ -288,6 +332,7 @@ def add_form(request):
             for i in range(b_data):
                 post13=Bracketed()
                 post13.name=UserDetail.objects.get(pk=name)
+                post13.date=post.date
                 post13.bracket=bracketed[i]
                 post13.body=bracket_body[i]
                 post13.degree_type=bdegree_type[i]            

@@ -1,0 +1,40 @@
+{% extends "collectdata/nav.html" %}
+{% block body_block %}
+{% for i in data %}
+    {{i}}<br>
+{% endfor %}
+
+<!-- <div class = "container"> 
+    <div class='row'>
+        <div class="col-md-4">
+            <table class="table table-borderless">
+                <tr>
+                    <td>NAME</td>
+                </tr>
+                {% for i in name%}
+                <tr>
+                    <td>{{i}}</td>
+                </tr>
+                {%endfor%}<br>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="table table-borderless">
+                <tr>
+                    <td>DATE</td>
+                </tr>
+                {% for i in date%}
+                <tr>
+                    <td>{{i}}</td>
+                </tr>
+                {%endfor%}<td>
+            </table>
+        </div>
+    </div>
+    <p>{{body}}</p><br>
+    <p>{{symbol}}</p><br>
+    <p>{{body1}}</p><br>
+    <p>{{degree}}</p><br>
+    <p>{{degree_type}}</p>
+</div> -->
+{% endblock %}

@@ -3,11 +3,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class UserDetail(models.Model):
     name=models.CharField(max_length=30,null=True,blank=False)
+    
     def __str__(self):
         return str(self.name)
     
 class Basicdata(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="basic_data")
     date=models.DateField(null=True)
     start_time=models.TimeField(null=True)
     stop_time=models.TimeField(null=True)
@@ -31,7 +32,8 @@ class Basicdata(models.Model):
         return str(self.name)
 
 class BoostAngle(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE, related_name="boost_angle")
+    date=models.DateField(null=True)
     boostanglebody=models.CharField(max_length=10,null=True)
     body=models.CharField(max_length=10,null=True)
     degree=models.CharField(max_length=10,null=True)  
@@ -41,7 +43,8 @@ class BoostAngle(models.Model):
         return str(self.name)
        
 class BoostAngleDetail(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="boost_angle_detail")
+    date=models.DateField(null=True)
     boostanglebody=models.CharField(max_length=10,null=True)
     body=models.CharField(max_length=10,null=True)
     boost_symbol=models.CharField(max_length=10,null=True,blank=True)
@@ -54,7 +57,8 @@ class BoostAngleDetail(models.Model):
         return str(self.name)
     
 class Condition(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="condition")
+    date=models.DateField(null=True)
     conditionbody=models.CharField(max_length=10,null=True)
     first_condition=models.CharField(max_length=10,null=True)
     degree=models.CharField(max_length=10,null=True) 
@@ -67,7 +71,8 @@ class Condition(models.Model):
     
 class Irsupport(models.Model):
 
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="irsupport")
+    date=models.DateField(null=True)
     body=models.CharField(max_length=10,null=True) 
     degree=models.CharField(max_length=10,null=True)
     sym=models.CharField(max_length=10,null=True,blank=True)
@@ -79,7 +84,8 @@ class Irsupport(models.Model):
         return str(self.name)
     
 class Bracketed(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="bracketed")
+    date=models.DateField(null=True)
     bracket=models.CharField(max_length=30,null=True,blank=False)
     body=models.CharField(max_length=30,null=True) 
     degree_type=models.CharField(max_length=10,null=True)
@@ -88,7 +94,8 @@ class Bracketed(models.Model):
         return str(self.name)
     
 class Gasgiant(models.Model): 
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="gas_giant")
+    date=models.DateField(null=True) 
     gas=models.CharField(max_length=10,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body=models.CharField(max_length=10,null=True)
@@ -100,7 +107,8 @@ class Gasgiant(models.Model):
     def __str__(self):
         return str(self.name)
 class C(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="c")
+    date=models.DateField(null=True)
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
@@ -112,7 +120,8 @@ class C(models.Model):
     
     
 class Opposition(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="opposition")
+    date=models.DateField(null=True)
     body1=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body2=models.CharField(max_length=30,null=True)
@@ -122,7 +131,8 @@ class Opposition(models.Model):
         return str(self.name)
     
 class Sextile(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="sextile")
+    date=models.DateField(null=True)
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
@@ -134,7 +144,8 @@ class Sextile(models.Model):
         return str(self.name)
 
 class Trine(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="trine")
+    date=models.DateField(null=True) 
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
@@ -146,7 +157,8 @@ class Trine(models.Model):
 
     
 class BracketedC(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="bracketedc")
+    date=models.DateField(null=True)
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
@@ -157,7 +169,8 @@ class BracketedC(models.Model):
         return str(self.name)
      
 class MultipleSquare(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE) 
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name="multiple_square")
+    date=models.DateField(null=True) 
     body=models.CharField(max_length=30,null=True)
     symbol=models.CharField(max_length=10,null=True,blank=True)
     body1=models.CharField(max_length=30,null=True)
@@ -165,10 +178,11 @@ class MultipleSquare(models.Model):
     degree_type=models.CharField(max_length=10,null=True)
     
     def __str__(self):
-        return str(self.name)
+        return str(self.date)
     
 class Moon(models.Model):
-    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE)
+    name=models.ForeignKey(UserDetail,null=True,on_delete=models.CASCADE,related_name='moon')
+    date=models.DateField(null=True)
     sym=models.CharField(max_length=10,null=True,blank=True)
     body=models.CharField(max_length=30,null=True)
     degree=models.CharField(max_length=10,null=True)
